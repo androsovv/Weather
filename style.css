@@ -105,6 +105,15 @@ form {
    font-size: 24px;
 }
 
+.box__left_bottom__favorite {
+   cursor: pointer;
+}
+
+.box__left_bottom__favorite:hover {
+   width: 28px;
+   height: 28px;
+}
+
 .town__tabs {
    font-weight: 400;
    font-size: 24px;
@@ -193,19 +202,22 @@ form {
    justify-content: center;
    align-items: center;
 }
+
 .box__left__options__item:last-child {
-   border:none;
+   border: none;
 }
+
 .box__left__options__item:hover {
    cursor: pointer;
 }
 
 
 .box__right {
-   width: 300px;
-   height: 390px;
+   width: 100%;
+   height: 100%;
    display: flex;
    flex-direction: column;
+   overflow: hidden;
 }
 
 .box__right__added {
@@ -218,4 +230,28 @@ form {
    align-items: flex-end;
    padding-left: 18px;
    padding-bottom: 7px;
+}
+
+.box__right__towns {
+   padding-top: 25px;
+   padding-left: 18px;
+   padding-right: 18px;
+   height: 99%;
+   width: 100%;
+   overflow:auto;
+}
+
+.box__right__towns__item {
+   margin-top: 10px;
+   font-weight: 400;
+   font-size: 24px;
+   display: flex;
+   align-items:center;
+   justify-content: space-between;
+}
+
+.delete {
+   display: block;
+   width: 12px;
+   height: 12px;
 }
