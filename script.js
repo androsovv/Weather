@@ -77,30 +77,68 @@
 UI.ADD_FAVORITE.addEventListener('click', event => {
    event.preventDefault();
    let townName = document.querySelector('.town__name').textContent;
-   console.log(favoriteTowns);
 
    if (favoriteTowns.length === 0) {
-      const newFavoriteTown = document.createElement('div');
-         newFavoriteTown.classList = 'box__right__towns__item';
-         newFavoriteTown.innerHTML = `<div class="box__right__towns__item__name">${townName}</div>
-         <img src="srs/icons/remove-icon.svg" alt="" class="delete">`;
-         UI.TOWNS_PARENT.append(newFavoriteTown);
-         favoriteTowns.push(newFavoriteTown.firstChild.textContent);
+      addFavoriteTown();
    } else {
          if (favoriteTowns.includes(townName)) {
           return;
          } else {
-            const newFavoriteTown = document.createElement('div');
-            newFavoriteTown.classList = 'box__right__towns__item';
-            newFavoriteTown.innerHTML = `<div class="box__right__towns__item__name">${townName}</div>
-            <img src="srs/icons/remove-icon.svg" alt="" class="delete">`;
-            UI.TOWNS_PARENT.append(newFavoriteTown);
-            favoriteTowns.push(newFavoriteTown.firstChild.textContent);
+            addFavoriteTown();
          }
-
    }
 });
 
  function convertTemperature(temp) {
     return Math.round(temp - 273.15);
  }
+
+ function addFavoriteTown() {
+   let townName = document.querySelector('.town__name').textContent;
+   const newFavoriteTown = document.createElement('div');
+   newFavoriteTown.classList = 'box__right__towns__item';
+   newFavoriteTown.innerHTML = `<div class="box__right__towns__item__name">${townName}</div>
+   <img src="srs/icons/remove-icon.svg" alt="" class="delete">`;
+   UI.TOWNS_PARENT.append(newFavoriteTown);
+   favoriteTowns.push(newFavoriteTown.firstChild.textContent);
+   deleteFavoriteTown();
+   showFavoriteTownInfo();
+ }
+
+function deleteFavoriteTown() {
+   const deleteBtn = document.querySelectorAll('.delete');
+   deleteBtn.forEach((item, index) => {
+      item.addEventListener('click', event => {
+         event.preventDefault();
+         favoriteTowns.splice(index, 1);
+         item.parentElement.remove();
+      });
+   });
+}
+
+function showFavoriteTownInfo() {
+   const showInfo = document.querySelectorAll('.box__right__towns__item__name');
+   showInfo.forEach(item => {
+      item.addEventListener('click', event => {
+         event.preventDefault();
+         console.log(item.textContent);
+
+
+         const serverUrl = 'http://api.openweathermap.org/data/2.5/weather',
+          cityName = item.textContent,
+          apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
+          url = `${serverUrl}?q=${cityName}&appid=${apiKey}`;
+         let weatherResponse = fetch(url);
+         
+         weatherResponse.then(getWheather => getWheather.json())
+            .then(result => {
+               UI.TEMPERATURE_NOW.textContent = convertTemperature(result.main.temp) + '°';
+               UI.TOWN_NAME.forEach(item => {
+                  item.textContent = result.name;
+               });
+            });
+
+
+      });
+   });
+}
