@@ -13,11 +13,11 @@
     WHEATHER_DETAILS: document.querySelector('.weather__deatails'),
     SUNRISE_DETAILS: document.querySelector('.sunrise'),
     SUNSET_DETAILS: document.querySelector('.sunset'),
-
-
+    FORECAST_PARENT: document.querySelector('.box__left__tabs__three'),
+    MAIN_ICON: document.querySelector('.box__left__middle'),
  };
 
- let favoriteTowns = [];
+const favoriteTowns = [];
 
 
 
@@ -58,6 +58,8 @@
 
  UI.SEARCH_BTN.addEventListener('click', event => {
     event.preventDefault();
+    UI.FORECAST_PARENT.innerHTML = '';
+    forecast();
     const serverUrl = 'http://api.openweathermap.org/data/2.5/weather',
        cityName = UI.SEARCH_TOWN.value,
        apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
@@ -72,6 +74,8 @@
              sunset = new Date(result.sys.sunset * 1000);
           console.log(result, result.sys.sunrise);
           UI.SEARCH_TOWN.value = '';
+          UI.MAIN_ICON.style.background = `url(https://openweathermap.org/img/wn/${result.weather[0].icon}.png) center center/cover no-repeat`;
+          UI.MAIN_ICON.style.backgroundSize = '80%';
           UI.TEMPERATURE_NOW.textContent = convertTemperature(result.main.temp) + '°';
           UI.TOWN_NAME.forEach(item => {
              item.textContent = result.name;
@@ -147,6 +151,8 @@
              .then(result => {
                const sunrise = new Date(result.sys.sunrise * 1000),
                      sunset = new Date(result.sys.sunset * 1000);
+               UI.MAIN_ICON.style.background = `url(https://openweathermap.org/img/wn/${result.weather[0].icon}.png) center center/cover no-repeat`;
+               UI.MAIN_ICON.style.backgroundSize = '80%';      
                 UI.TEMPERATURE_NOW.textContent = convertTemperature(result.main.temp) + '°';
                 UI.TOWN_NAME.forEach(item => {
                    item.textContent = result.name;
@@ -161,4 +167,46 @@
 
        });
     });
+ }
+
+ function forecast() {
+   const serverUrl = 'http://api.openweathermap.org/data/2.5/forecast',
+   cityName = UI.SEARCH_TOWN.value,
+   apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
+   url = `${serverUrl}?q=${cityName}&appid=${apiKey}&cnt=12`;
+
+   let forecastResponse = fetch(url);
+
+   forecastResponse.then(getForecast => getForecast.json())
+   .then(forecast => {
+      console.log(forecast);
+      console.log(forecast.list[3]);
+     for (let i = 0; i < forecast.list.length; i++) {
+      let div = document.createElement('div'),
+          date = new Date(forecast.list[i].dt * 1000);
+      const month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+
+      div.classList = 'wheather__block';
+      div.innerHTML = ` <div class="wheather__block__left">
+                           <div class="wheather__block__left__date">
+                           ${date.getUTCDate() + " " + month[date.getMonth()]}</div>
+                           <div class="wheather__block__left__temperature temperature">Temperature: 
+                           ${convertTemperature(forecast.list[i].main.temp)}°</div>
+                           <div class="wheather__block__left__feels feels">Feels like: 
+                           ${convertTemperature(forecast.list[i].main.feels_like)}°</div>
+                        </div>
+                        <div class="wheather__block__right">
+                           <div class="wheather__block__right__time">
+                           ${forecast.list[i].dt_txt.slice(11, 16)}
+                           </div>
+                           <div class="wheather__block__right__weather">
+                           ${forecast.list[i].weather[0].main}
+                           </div>
+                           <img src="https://openweathermap.org/img/wn/${forecast.list[i].weather[0].icon}.png" class="wheather__block__right__img">
+                        </div>`;
+      UI.FORECAST_PARENT.append(div);
+     }
+   });
+
  }

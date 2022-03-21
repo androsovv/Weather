@@ -147,11 +147,24 @@ form {
    margin-top: 12px;
 }
 
+/* .box__left__tabs__item {
+   overflow: auto;
+} */
 .box__left__tabs__three {
-   height: 345px;
+   height: 280px;
    width: 300px;
    padding-left: 15px;
    overflow: auto;
+   -ms-overflow-style: none;
+   scrollbar-width: none; 
+}
+.box__left__tabs__three::-webkit-scrollbar {
+   width: 0;
+   height: 0;
+}
+
+.box__left__tabs__three__town {
+   padding-left: 15px;
 }
 
 .wheather__block {
@@ -168,16 +181,17 @@ form {
 }
 
 .wheather__block__left__temperature {
-   margin-top: 38px;
+   margin-top: 20px;
 }
 
 .wheather__block__right__weather {
-   margin-top: 34px;
+   margin-top: 20px;
    margin-left: 5px;
 }
 
 .wheather__block__right__img {
    margin-left: 7px;
+   margin-bottom: 15px;
 }
 
 .box__left__options {
@@ -250,8 +264,21 @@ form {
    justify-content: space-between;
 }
 
+.box__right__towns__item__name {
+   cursor: pointer;
+}
+.box__right__towns__item__name:hover {
+   background:#53ea93;
+}
+
 .delete {
    display: block;
    width: 12px;
    height: 12px;
+   cursor: pointer;
+}
+
+.delete:hover {
+   width: 15px;
+   height: 15px;
 }
