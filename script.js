@@ -1,10 +1,7 @@
  import {favoriteTowns, UI, month} from './view.js';
 
-
-
-
- function hideBoxLeftContent() {
-    UI.TABS_CONTENT.forEach(item => {
+ function hideBoxLeftContent() {                                 // скрытие контента табов now, details, forecast
+    UI.TABS_CONTENT.forEach(item => {     
        item.style.display = 'none';
     });
     UI.TABS_BTN.forEach(item => {
@@ -12,7 +9,7 @@
     });
  }
 
- function showBoxLeftContent(i) {
+ function showBoxLeftContent(i) {                               //ф-ция показа контента табов
     UI.TABS_CONTENT[i].style.display = 'block';
     UI.TABS_BTN[i].classList.add('active');
  }
@@ -22,7 +19,7 @@
  showBoxLeftContent(0);
 
 
- UI.TABS_PARENT.addEventListener('click', event => {
+ UI.TABS_PARENT.addEventListener('click', event => {                     // переключение табов через делегирование
     const target = event.target;
 
     if (target.classList.contains('box__left__options__item')) {
@@ -36,11 +33,11 @@
 
  });
 
- UI.SEARCH_BTN.addEventListener('click', event => {
+ UI.SEARCH_BTN.addEventListener('click', event => {                      // показ погоды по кнопке поиска
     event.preventDefault();
     UI.FORECAST_PARENT.innerHTML = '';
     forecast(UI.SEARCH_TOWN.value);
-    const serverUrl = 'http://api.openweathermap.org/data/2.5/weather',
+    const serverUrl = 'https://api.openweathermap.org/data/2.5/weather',
        cityName = UI.SEARCH_TOWN.value,
        apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
        url = `${serverUrl}?q=${cityName}&appid=${apiKey}`;
@@ -50,7 +47,7 @@
    
  });
 
- UI.ADD_FAVORITE.addEventListener('click', event => {
+ UI.ADD_FAVORITE.addEventListener('click', event => {                    //добавляем любимый город
     event.preventDefault();
     let townName = document.querySelector('.town__name').textContent;
 
@@ -92,7 +89,7 @@
     });
  }
 
- function showFavoriteTownInfo() {
+ function showFavoriteTownInfo() {                               //функция показа погоды по уже добавленному любимому городу
     const showInfo = document.querySelectorAll('.box__right__towns__item__name');
     showInfo.forEach(item => {
        item.addEventListener('click', event => {
@@ -100,7 +97,7 @@
           console.log(item.textContent);
 
 
-          const serverUrl = 'http://api.openweathermap.org/data/2.5/weather',
+          const serverUrl = 'https://api.openweathermap.org/data/2.5/weather',
              cityName = item.textContent,
              apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
              url = `${serverUrl}?q=${cityName}&appid=${apiKey}`;
@@ -114,7 +111,7 @@
 
  function forecast(nameValue) {
     UI.FORECAST_PARENT.innerHTML = '';
-    const serverUrl = 'http://api.openweathermap.org/data/2.5/forecast',
+    const serverUrl = 'https://api.openweathermap.org/data/2.5/forecast',
        cityName = nameValue,
        apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
        url = `${serverUrl}?q=${cityName}&appid=${apiKey}&cnt=12`;
