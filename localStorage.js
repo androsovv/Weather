@@ -5,7 +5,8 @@ import {
 
 import {
    deleteFavoriteTown,
-   showFavoriteTownInfo
+   showFavoriteTownInfo,
+   currentCity
 } from './script.js';
 
 export function saveInformation(arr) {
@@ -29,3 +30,6 @@ export function getSaveInformation() {
    }
 }
 
+export function getCurrentCity() {
+   localStorage.setItem('Current city', currentCity);
+}

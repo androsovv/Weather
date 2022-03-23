@@ -1,15 +1,19 @@
  import {
     favoriteTowns,
     UI,
-    month
+    month,
  } from './view.js';
  import {
     saveInformation,
-    getSaveInformation
+    getSaveInformation,
+    getCurrentCity
  } from './localStorage.js';
 
+ export let currentCity;
+
  getSaveInformation();
- console.log(favoriteTowns);
+
+ 
 
  function hideBoxLeftContent() { // скрытие контента табов now, details, forecast
     UI.TABS_CONTENT.forEach(item => {
@@ -44,17 +48,26 @@
 
  });
 
+ 
  UI.SEARCH_BTN.addEventListener('click', event => { // показ погоды по кнопке поиска
     event.preventDefault();
+
+   currentCity = UI.SEARCH_TOWN.value;
+
+
+
     UI.FORECAST_PARENT.innerHTML = '';
     forecast(UI.SEARCH_TOWN.value);
+
     const serverUrl = 'https://api.openweathermap.org/data/2.5/weather',
        cityName = UI.SEARCH_TOWN.value,
        apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
        url = `${serverUrl}?q=${cityName}&appid=${apiKey}`;
 
     let weatherResponse = fetch(url);
+
     getWheather(weatherResponse);
+    getCurrentCity();
 
  });
 
@@ -109,14 +122,16 @@
     showInfo.forEach(item => {
        item.addEventListener('click', event => {
           event.preventDefault();
-          console.log(item.textContent);
+
 
 
           const serverUrl = 'https://api.openweathermap.org/data/2.5/weather',
              cityName = item.textContent,
              apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
              url = `${serverUrl}?q=${cityName}&appid=${apiKey}`;
+
           let weatherResponse = fetch(url);
+
           forecast(item.textContent);
           getWheather(weatherResponse);
 
