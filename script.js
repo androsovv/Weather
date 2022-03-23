@@ -5,8 +5,11 @@
  } from './view.js';
  import {
     saveInformation,
-    getInformation
+    getSaveInformation
  } from './localStorage.js';
+
+ getSaveInformation();
+ console.log(favoriteTowns);
 
  function hideBoxLeftContent() { // скрытие контента табов now, details, forecast
     UI.TABS_CONTENT.forEach(item => {
@@ -74,9 +77,11 @@
     return Math.round(temp - 273.15);
  }
 
- function addFavoriteTown() {
+ export function addFavoriteTown() {
     let townName = document.querySelector('.town__name').textContent;
+
     const newFavoriteTown = document.createElement('div');
+
     newFavoriteTown.classList = 'box__right__towns__item';
     newFavoriteTown.innerHTML = `<div class="box__right__towns__item__name">${townName}</div>
    <img src="srs/icons/remove-icon.svg" alt="" class="delete">`;
@@ -88,7 +93,7 @@
 
  }
 
- function deleteFavoriteTown() {
+ export function deleteFavoriteTown() {
     const deleteBtn = document.querySelectorAll('.delete');
     deleteBtn.forEach((item, index) => {
        item.addEventListener('click', event => {
@@ -99,7 +104,7 @@
     });
  }
 
- function showFavoriteTownInfo() { //функция показа погоды по уже добавленному любимому городу
+ export function showFavoriteTownInfo() { //функция показа погоды по уже добавленному любимому городу
     const showInfo = document.querySelectorAll('.box__right__towns__item__name');
     showInfo.forEach(item => {
        item.addEventListener('click', event => {
