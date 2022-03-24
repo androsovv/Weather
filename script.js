@@ -12,15 +12,17 @@
  } from './localStorage.js';
 
 
-export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
+ export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather';
+
 
 
  getSaveInformation();
  showLastWeather();
 
- 
-// скрытие контента табов now, details, forecast
- function hideBoxLeftContent() { 
+ //  console.log(favoriteTowns);
+
+ // скрытие контента табов now, details, forecast
+ function hideBoxLeftContent() {
     UI.TABS_CONTENT.forEach(item => {
        item.style.display = 'none';
     });
@@ -30,7 +32,7 @@ export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather'
  }
 
  //ф-ция показа контента табов
- function showBoxLeftContent(i) { 
+ function showBoxLeftContent(i) {
     UI.TABS_CONTENT[i].style.display = 'block';
     UI.TABS_BTN[i].classList.add('active');
  }
@@ -39,8 +41,8 @@ export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather'
  hideBoxLeftContent();
  showBoxLeftContent(0);
 
-// переключение табов через делегирование
- UI.TABS_PARENT.addEventListener('click', event => { 
+ // переключение табов через делегирование
+ UI.TABS_PARENT.addEventListener('click', event => {
     const target = event.target;
 
     if (target.classList.contains('box__left__options__item')) {
@@ -55,7 +57,7 @@ export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather'
  });
 
  // показ погоды по кнопке поиска
- UI.SEARCH_BTN.addEventListener('click', event => { 
+ UI.SEARCH_BTN.addEventListener('click', event => {
     event.preventDefault();
 
     getCurrentCity(UI.SEARCH_TOWN.value);
@@ -67,7 +69,7 @@ export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather'
 
     const serverUrl = WEATHER_API_URL,
        cityName = UI.SEARCH_TOWN.value,
-       apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
+       apiKey = 'e6ca4f582a85a52b47aa34c1cb1f9804',
        url = `${serverUrl}?q=${cityName}&appid=${apiKey}`;
 
     let weatherResponse = fetch(url);
@@ -77,15 +79,15 @@ export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather'
  });
 
  //добавляем любимый город
- UI.ADD_FAVORITE.addEventListener('click', event => { 
+ UI.ADD_FAVORITE.addEventListener('click', event => {
     event.preventDefault();
     let townName = document.querySelector('.town__name').textContent;
-       if (favoriteTowns.includes(townName)) {
-          return;
-       } else {
-          addFavoriteTown();
-       }
-    
+    if (favoriteTowns.includes(townName)) {
+       return;
+    } else {
+       addFavoriteTown();
+    }
+
  });
 
  function convertTemperature(temp) {
@@ -111,29 +113,26 @@ export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather'
  export function deleteFavoriteTown() {
     const deleteBtn = document.querySelectorAll('.delete');
     deleteBtn.forEach((item, index) => {
-       item.addEventListener('click', event => {
-          event.preventDefault();
-          favoriteTowns.splice(index, 1);
+       item.onclick = function () {
           removeStorageTown(index);
+          favoriteTowns.splice(index, 1);
           item.parentElement.remove();
-       });
+          console.log(favoriteTowns);
+       };
     });
  }
 
  //функция показа погоды по уже добавленному любимому городу
- export function showFavoriteTownInfo() { 
+ export function showFavoriteTownInfo() {
     const showInfo = document.querySelectorAll('.box__right__towns__item__name');
     showInfo.forEach(item => {
-       item.addEventListener('click', event => {
-          event.preventDefault();
+       item.onclick = function () {
 
           getCurrentCity(item.textContent);
 
-
-
           const serverUrl = WEATHER_API_URL,
              cityName = item.textContent,
-             apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
+             apiKey = 'e6ca4f582a85a52b47aa34c1cb1f9804',
              url = `${serverUrl}?q=${cityName}&appid=${apiKey}`;
 
           let weatherResponse = fetch(url);
@@ -141,7 +140,7 @@ export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather'
           forecast(item.textContent);
           getWheather(weatherResponse);
 
-       });
+       };
     });
  }
 
@@ -149,15 +148,13 @@ export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather'
     UI.FORECAST_PARENT.innerHTML = '';
     const serverUrl = 'https://api.openweathermap.org/data/2.5/forecast',
        cityName = nameValue,
-       apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
+       apiKey = 'e6ca4f582a85a52b47aa34c1cb1f9804',
        url = `${serverUrl}?q=${cityName}&appid=${apiKey}&cnt=12`;
 
     let forecastResponse = fetch(url);
 
     forecastResponse.then(getForecast => getForecast.json())
        .then(forecast => {
-          console.log(forecast);
-          console.log(forecast.list[3]);
           for (let i = 0; i < forecast.list.length; i++) {
              let div = document.createElement('div'),
                 date = new Date(forecast.list[i].dt * 1000);
@@ -190,7 +187,6 @@ export const WEATHER_API_URL = 'https://api.openweathermap.org/data/2.5/weather'
        .then(result => {
           const sunrise = new Date(result.sys.sunrise * 1000),
              sunset = new Date(result.sys.sunset * 1000);
-          console.log(result, result.sys.sunrise);
           UI.SEARCH_TOWN.value = '';
           UI.MAIN_ICON.style.background = `url(https://openweathermap.org/img/wn/${result.weather[0].icon}.png) center center/cover no-repeat`;
           UI.MAIN_ICON.style.backgroundSize = '80%';

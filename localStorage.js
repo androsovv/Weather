@@ -12,9 +12,6 @@ import {
 } from './script.js';
 
 export function saveInformation(arr) {
-   // for (let i = 0; i < arr.length; i++) {
-   //    localStorage.setItem(`favoriteTown ${i}`, favoriteTowns[i]);
-   // }
    localStorage.setItem("favoriteTowns", JSON.stringify(arr));
 }
 
@@ -25,23 +22,24 @@ export function removeStorageTown(index) {
 }
 
 export function getSaveInformation() {
+   let arr = localStorage.getItem("favoriteTowns").split(',');
    if(localStorage.length != 0) {
-      for (let i = 0; i < localStorage.length - 1; i++) {
+      for (let i = 0; i < arr.length; i++) {
 
-         favoriteTowns.push(localStorage.getItem(`favoriteTown ${i}`));
+         let arr = JSON.parse(localStorage.getItem("favoriteTowns"));
+
+         favoriteTowns.push(arr[i]);
 
          const savedFavoriteTown = document.createElement('div');
    
          savedFavoriteTown.classList = 'box__right__towns__item';
-         savedFavoriteTown.innerHTML = `<div class="box__right__towns__item__name">${localStorage.getItem(`favoriteTown ${i}`)}</div>
+         savedFavoriteTown.innerHTML = `<div class="box__right__towns__item__name">${favoriteTowns[i]}</div>
       <img src="srs/icons/remove-icon.svg" alt="" class="delete">`;
          UI.TOWNS_PARENT.append(savedFavoriteTown);
          deleteFavoriteTown();
          showFavoriteTownInfo();
       }
    }
-   console.log(favoriteTowns);
-   console.log(localStorage.getItem('favoriteTown'));
 }
 
 export function getCurrentCity(currentCity) {
@@ -55,7 +53,7 @@ export function showLastWeather() {
 
    const serverUrl = WEATHER_API_URL,
          cityName = lastCurentCity,
-         apiKey = 'f660a2fb1e4bad108d6160b7f58c555f',
+         apiKey = 'e6ca4f582a85a52b47aa34c1cb1f9804',
          url = `${serverUrl}?q=${cityName}&appid=${apiKey}`;
 
    let weatherResponse = fetch(url);
