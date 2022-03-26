@@ -17,7 +17,7 @@ export const UI = {
    MAIN_ICON: document.querySelector('.box__left__middle'),
 };
 
-export const favoriteTowns = [],
+export const favoriteTowns = new Set(),
              month = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
 

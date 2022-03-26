@@ -82,12 +82,10 @@
  UI.ADD_FAVORITE.addEventListener('click', event => {
     event.preventDefault();
     let townName = document.querySelector('.town__name').textContent;
-    if (favoriteTowns.includes(townName)) {
-       return;
-    } else {
-       addFavoriteTown();
-    }
 
+    if(!favoriteTowns.has(townName)) {
+      addFavoriteTown();
+    }
  });
 
  function convertTemperature(temp) {
@@ -103,7 +101,7 @@
     newFavoriteTown.innerHTML = `<div class="box__right__towns__item__name">${townName}</div>
    <img src="srs/icons/remove-icon.svg" alt="" class="delete">`;
     UI.TOWNS_PARENT.append(newFavoriteTown);
-    favoriteTowns.push(newFavoriteTown.firstChild.textContent);
+    favoriteTowns.add(newFavoriteTown.firstChild.textContent);
     deleteFavoriteTown();
     showFavoriteTownInfo();
     saveInformation(favoriteTowns);
@@ -114,10 +112,10 @@
     const deleteBtn = document.querySelectorAll('.delete');
     deleteBtn.forEach((item, index) => {
        item.onclick = function () {
-          removeStorageTown(index);
-          favoriteTowns.splice(index, 1);
+          favoriteTowns.delete(index);
           item.parentElement.remove();
           console.log(favoriteTowns);
+          removeStorageTown(index);
        };
     });
  }
@@ -144,42 +142,44 @@
     });
  }
 
- export function forecast(nameValue) {
-    UI.FORECAST_PARENT.innerHTML = '';
-    const serverUrl = 'https://api.openweathermap.org/data/2.5/forecast',
-       cityName = nameValue,
-       apiKey = 'e6ca4f582a85a52b47aa34c1cb1f9804',
-       url = `${serverUrl}?q=${cityName}&appid=${apiKey}&cnt=12`;
+ export async function forecast(nameValue) {
+    try {
+       UI.FORECAST_PARENT.innerHTML = '';
+       const serverUrl = 'https://api.openweathermap.org/data/2.5/forecast',
+          cityName = nameValue,
+          apiKey = 'e6ca4f582a85a52b47aa34c1cb1f9804',
+          url = `${serverUrl}?q=${cityName}&appid=${apiKey}&cnt=12`;
 
-    let forecastResponse = fetch(url);
+       let forecastResponse = await fetch(url);
 
-    forecastResponse.then(getForecast => getForecast.json())
-       .then(forecast => {
-          for (let i = 0; i < forecast.list.length; i++) {
-             let div = document.createElement('div'),
-                date = new Date(forecast.list[i].dt * 1000);
-             div.classList = 'wheather__block';
-             div.innerHTML = ` <div class="wheather__block__left">
-                           <div class="wheather__block__left__date">
-                           ${date.getUTCDate() + " " + month[date.getMonth()]}</div>
-                           <div class="wheather__block__left__temperature temperature">Temperature: 
-                           ${convertTemperature(forecast.list[i].main.temp)}°</div>
-                           <div class="wheather__block__left__feels feels">Feels like: 
-                           ${convertTemperature(forecast.list[i].main.feels_like)}°</div>
-                        </div>
-                        <div class="wheather__block__right">
-                           <div class="wheather__block__right__time">
-                           ${forecast.list[i].dt_txt.slice(11, 16)}
-                           </div>
-                           <div class="wheather__block__right__weather">
-                           ${forecast.list[i].weather[0].main}
-                           </div>
-                           <img src="https://openweathermap.org/img/wn/${forecast.list[i].weather[0].icon}.png" class="wheather__block__right__img">
-                        </div>`;
-             UI.FORECAST_PARENT.append(div);
-          }
-       });
+       let json = await forecastResponse.json();
 
+       for (let i = 0; i < json.list.length; i++) {
+          let div = document.createElement('div'),
+             date = new Date(json.list[i].dt * 1000);
+          div.classList = 'wheather__block';
+          div.innerHTML = ` <div class="wheather__block__left">
+                             <div class="wheather__block__left__date">
+                             ${date.getUTCDate() + " " + month[date.getMonth()]}</div>
+                             <div class="wheather__block__left__temperature temperature">Temperature: 
+                             ${convertTemperature(json.list[i].main.temp)}°</div>
+                             <div class="wheather__block__left__feels feels">Feels like: 
+                             ${convertTemperature(json.list[i].main.feels_like)}°</div>
+                          </div>
+                          <div class="wheather__block__right">
+                             <div class="wheather__block__right__time">
+                             ${json.list[i].dt_txt.slice(11, 16)}
+                             </div>
+                             <div class="wheather__block__right__weather">
+                             ${json.list[i].weather[0].main}
+                             </div>
+                             <img src="https://openweathermap.org/img/wn/${json.list[i].weather[0].icon}.png" class="wheather__block__right__img">
+                          </div>`;
+          UI.FORECAST_PARENT.append(div);
+       }
+    } catch (err) {
+       alert(err);
+    }
  }
 
  export function getWheather(response) {

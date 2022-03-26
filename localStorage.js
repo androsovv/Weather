@@ -12,7 +12,7 @@ import {
 } from './script.js';
 
 export function saveInformation(arr) {
-   localStorage.setItem("favoriteTowns", JSON.stringify(arr));
+   localStorage.setItem("favoriteTowns", JSON.stringify([...arr]));
 }
 
 export function removeStorageTown(index) {
@@ -22,22 +22,23 @@ export function removeStorageTown(index) {
 }
 
 export function getSaveInformation() {
-   let arr = localStorage.getItem("favoriteTowns").split(',');
    if(localStorage.length != 0) {
-      for (let i = 0; i < arr.length; i++) {
+      let townsCount = localStorage.getItem("favoriteTowns").split(',').length;
+      for (let i = 0; i < townsCount; i++) {
 
          let arr = JSON.parse(localStorage.getItem("favoriteTowns"));
 
-         favoriteTowns.push(arr[i]);
+         favoriteTowns.add(arr[i]);
 
          const savedFavoriteTown = document.createElement('div');
    
          savedFavoriteTown.classList = 'box__right__towns__item';
-         savedFavoriteTown.innerHTML = `<div class="box__right__towns__item__name">${favoriteTowns[i]}</div>
+         savedFavoriteTown.innerHTML = `<div class="box__right__towns__item__name">${arr[i]}</div>
       <img src="srs/icons/remove-icon.svg" alt="" class="delete">`;
          UI.TOWNS_PARENT.append(savedFavoriteTown);
          deleteFavoriteTown();
          showFavoriteTownInfo();
+         console.log(favoriteTowns);
       }
    }
 }
